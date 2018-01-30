@@ -13,18 +13,23 @@ var ejoCookieConsent = (function ($) {
     var priv = {}; // Store private properties and methods
     var publ = {}; // Store public properties and methods
 
+    /**
+     * Note: erasing cookie with javascript has no use because this script is not
+     *       added to the site when the cookie is present
+     */
+
     // Variables
-    priv.noCookieMode      = true;                    // Debug Mode: true will disable the cookie, allowing you to debug the banner.
-    priv.consentDuration   = 30;                       // Duration in Days: The number of days before the cookie should expire.
-    priv.containerID       = 'cookie-consent-block';   // The ID of the notice container div
+    priv.debugMode            = true;                     // Debug Mode: true will disable the cookie, allowing you to debug the banner.
+    priv.consentDuration      = 30;                       // Duration in Days: The number of days before the cookie should expire.
+    priv.containerID          = 'cookie-consent-block';   // The ID of the notice container div
     priv.containerButtonClass = 'close-cookie-consent-block';
-    priv.cookieName        = 'EUCookieConsent';        // The name of the cookie
-    priv.cookieActiveValue = '1';                      // The active value of the cookie.
+    priv.cookieName           = 'EUCookieConsent';        // The name of the cookie
+    priv.cookieActiveValue    = '1';                      // The active value of the cookie.
 
     priv.setComplianceCookie = function() {
 
         // If no debug mode, set the cookie
-        if ( ! priv.noCookieMode ) {
+        if ( ! priv.debugMode ) {
 
             // Set the consent duration into a cookie date string
             var date = new Date();
@@ -33,18 +38,18 @@ var ejoCookieConsent = (function ($) {
             // Set the actual cookie
             document.cookie = priv.cookieName + '=' + priv.cookieActiveValue + '; expires=' + date.toGMTString() + '; path=/';
         }
-    }
+    };
 
-    priv.createConsentDiv = function() {
+    priv.createSpaceForCookieConsentBlock = function() {
         // Get the height of the consent block
         var consentBlockHeight = $('#' + priv.containerID).innerHeight();
 
         // Add class to body
         $('body').addClass('has-cookie-banner');
         $('body').css('padding-top', consentBlockHeight + 'px');
-    }
+    };
 
-    priv.checkCookie = function(name) {
+    priv.getCookie = function(name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
         for(var i=0;i < ca.length;i++) {
@@ -53,9 +58,9 @@ var ejoCookieConsent = (function ($) {
             if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
         }
         return null;
-    }
+    };
 
-    priv.removeMe = function(){
+    priv.hideCookieConsentBlock = function(){
 
         // Hide the cookie banner
         $( '#' + priv.containerID).slideToggle(function() {
@@ -67,16 +72,16 @@ var ejoCookieConsent = (function ($) {
 
         // Set the cookie
         priv.setComplianceCookie();
-    }
+    };
 
     publ.init = function() {
 
-        if(priv.checkCookie(priv.cookieName) != priv.cookieActiveValue || priv.noCookieMode ){
-            priv.createConsentDiv();
+        if(priv.getCookie(priv.cookieName) != priv.cookieActiveValue ){
+            priv.createSpaceForCookieConsentBlock();
         }
 
-        $( '.' + priv.containerButtonClass).click(priv.removeMe);
-    }
+        $( '.' + priv.containerButtonClass).click(priv.hideCookieConsentBlock);
+    };
 
     /**
      * Share public properties and methods with the global namespace
