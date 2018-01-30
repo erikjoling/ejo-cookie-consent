@@ -1,0 +1,35 @@
+@charset 'UTF-8';
+
+// Colors
+// $gray        : #BBBBBB;
+// $gray-dark   : #A5A5A5;
+// $gray-light  : #E5E5E5;
+// $white       : #FFFFFF;
+// $black       : #222222;
+// $black-light : #777777;
+// $green       : #20AA73;
+// $green-dark  : #069059;
+// $red         : #D00027;
+
+// Base space
+$base-space: 1.5rem;
+$vertical-space-ratio: 1;
+$horizontal-space-ratio: 1.25;
+
+@import "helpers";
+
+body.has-cookie-banner {}
+
+#cookie-consent-block {
+    position: absolute;
+    height: auto;
+    top: 0;
+    z-index: 99999;
+    background: #282b2d;
+    color: #ccc;
+    text-align: center;
+    width: 100%;
+    padding: 1.4rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}

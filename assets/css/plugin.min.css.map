@@ -1,0 +1,1 @@
+{"version":3,"names":[],"mappings":"","sources":["plugin.css"],"sourcesContent":["#cookie-consent-block {\n  position: absolute;\n  height: auto;\n  top: 0;\n  z-index: 99999;\n  background: #282b2d;\n  color: #ccc;\n  text-align: center;\n  width: 100%;\n  padding: 1.4rem 0;\n  font-size: 0.9rem;\n  line-height: 1.4;\n}\n"],"file":"plugin.min.css"}

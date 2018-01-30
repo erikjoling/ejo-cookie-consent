@@ -1,0 +1,6 @@
+# Don't include Node.js stuff
+node_modules/
+
+# Don't include Sublime Text things
+*.sublime*
+
