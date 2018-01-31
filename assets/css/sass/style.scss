@@ -1,35 +1,52 @@
 @charset 'UTF-8';
 
 // Colors
-// $gray        : #BBBBBB;
-// $gray-dark   : #A5A5A5;
-// $gray-light  : #E5E5E5;
-// $white       : #FFFFFF;
-// $black       : #222222;
-// $black-light : #777777;
-// $green       : #20AA73;
-// $green-dark  : #069059;
-// $red         : #D00027;
-
-// Base space
-$base-space: 1.5rem;
-$vertical-space-ratio: 1;
-$horizontal-space-ratio: 1.25;
+$gray        : #BBBBBB;
+$gray-dark   : #A5A5A5;
+$gray-light  : #E5E5E5;
+$white       : #FFFFFF;
+$black       : #222222;
+$black-light : #777777;
+$green       : #20AA73;
+$green-dark  : #069059;
+$red         : #D00027;
+$blue        : #0000EE;
 
 @import "helpers";
 
 body.has-cookie-banner {}
 
 #cookie-consent-block {
+    box-sizing: border-box;
+
     position: absolute;
     height: auto;
+    width: 100%;
     top: 0;
     z-index: 99999;
-    background: #282b2d;
-    color: #ccc;
-    text-align: center;
-    width: 100%;
-    padding: 1.4rem 0;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+
+    @media screen and (min-width: 720px) {
+        flex-wrap: nowrap;
+    }
+
+    padding: 1rem 1rem;
+    background: $black;
+    color: $white;
+    // text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.5;
+
+    > * {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    a {
+        color: inherit;
+    }
 }

@@ -1,13 +1,40 @@
 #cookie-consent-block {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: absolute;
   height: auto;
+  width: 100%;
   top: 0;
   z-index: 99999;
-  background: #282b2d;
-  color: #ccc;
-  text-align: center;
-  width: 100%;
-  padding: 1.4rem 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding: 1rem 1rem;
+  background: #222222;
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 720px) {
+  #cookie-consent-block {
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+  }
+}
+
+#cookie-consent-block > * {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+#cookie-consent-block a {
+  color: inherit;
 }

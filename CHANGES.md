@@ -1,4 +1,6 @@
-- 
+0.2
+- Added default style
+- Added filters for developer flexibility
 - Added debug mode to destroy cookie (with php)
 - Only show privacy policy url setting if cookie consent text is disabled
 - Added settings for cookie consent text and button

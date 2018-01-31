@@ -4,7 +4,7 @@ Plugin Name:  EJO Cookie Consent
 Plugin URI:   https://github.com/erikjoling/ejo-cookie-consent
 Description:  WordPress Cookie Consent (EU law) plugin
 Author:       Erik Joling <erik@ejoweb.nl>
-Version:      0.1
+Version:      0.2
 Author URI:   https://github.com/erikjoling/
 Text Domain:  ejocc
 
@@ -44,7 +44,7 @@ final class EJO_Cookie_Consent {
      * @access public
      * @var    string
      */
-    public $cookie_name = 'EUCookieConsent';
+    public $cookie_name = 'EJOCookieConsent';
 
     /**
      * Debug mode
@@ -52,7 +52,7 @@ final class EJO_Cookie_Consent {
      * @access public
      * @var    boolean
      */
-    public $debug_mode = true;
+    public $debug_mode = false;
 
     /**
      * Returns the instance.
@@ -67,7 +67,6 @@ final class EJO_Cookie_Consent {
         if ( is_null( $instance ) ) {
             $instance = new self;
             $instance->setup();
-            $instance->core();
             $instance->setup_actions();
         }
 
@@ -96,27 +95,11 @@ final class EJO_Cookie_Consent {
 
         // Set the version property
         $this->version = get_plugin_data( __FILE__ )['Version'];
-    }
 
-    /**
-     * Loads the core files.
-     *
-     * @access private
-     * @return void
-     */
-    private function core() {
-
+        // Debugging
         if ($this->debug_mode) {
+            // error_log( 'Get Cookie: ' . $this->get_cookie() );
             $this->delete_cookie();
-        }
-    }
-
-    private function delete_cookie() {
-        if (isset($_COOKIE[$this->cookie_name])) {
-            error_log(print_r($_COOKIE[$this->cookie_name]));
-            
-            unset($_COOKIE[$this->cookie_name]);
-            setcookie($this->cookie_name, '', time() - 3600, '/'); // empty value and old timestamp
         }
     }
 
@@ -140,6 +123,45 @@ final class EJO_Cookie_Consent {
     }
 
     /**
+     * Get the consent cookie
+     * 
+     * @access private
+     * @return boolean
+     */
+    private function get_cookie() {
+        if ( isset($_COOKIE[$this->cookie_name]) )
+            return $_COOKIE[$this->cookie_name];
+        else
+            return false;
+    }
+
+    /**
+     * Delete the consent cookie
+     * 
+     * @access private
+     * @return void
+     */
+    private function delete_cookie() {
+        if ($this->cookie_consent_is_given()) {
+            unset($_COOKIE[$this->cookie_name]);
+            setcookie($this->cookie_name, '', time() - 3600, '/'); // empty value and old timestamp
+        }
+    }
+
+    /**
+     * Check whether cookie consent is given
+     *
+     * @access public
+     * @return boolean
+     */
+    public function cookie_consent_is_given() {
+        if ($this->get_cookie())
+            return true;
+        else
+            return false;
+    }
+
+    /**
      * Hook scripts
      *
      * @access public
@@ -150,10 +172,17 @@ final class EJO_Cookie_Consent {
         $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
         // Register Scripts
-        wp_register_script( 'ejo-cookie-consent-plugin', $this->uri . "/assets/js/plugin{$suffix}.js", array( 'jquery' ), $this->version, true );
+        wp_register_script( 'ejo-cookie-consent-plugin', $this->uri . "assets/js/plugin{$suffix}.js", array( 'jquery' ), $this->version, true );
+
 
         // Load script if the consent cookie isn't set
-        if ( ! isset( $_COOKIE[$this->cookie_name] ) ) {
+        if ( ! $this->cookie_consent_is_given() ) {
+
+            // Localize the script
+            wp_localize_script( 'ejo-cookie-consent-plugin', 'ejoccLocalization', array(
+                'cookieName' => $this->cookie_name,
+            ) );
+
             wp_enqueue_script( 'ejo-cookie-consent-plugin' );
         }
     }
@@ -172,9 +201,55 @@ final class EJO_Cookie_Consent {
         wp_register_style( 'ejo-cookie-consent-style', $this->uri ."assets/css/plugin{$suffix}.css", array(), $this->version );
 
         // Don't enqueue if consent cookie is set
-        if ( ! isset( $_COOKIE[$this->cookie_name] ) ) {
+        if ( ! $this->cookie_consent_is_given() && ! apply_filters('ejocc_custom_style', false) ) {
             wp_enqueue_style( 'ejo-cookie-consent-style' );
         }
+    }
+
+    /**
+     * Get Privacy Policy URL
+     *
+     * @access public
+     * @return string
+     */
+    public function get_policy_url() {
+        return get_option( 'ejocc_policy_url', '' );
+    }
+
+    /**
+     * Get Cookie Consent Text
+     *
+     * @access public
+     * @return string
+     */
+    public function get_cookie_consent_text() {
+
+        $cookie_consent_text = sprintf( '<p>' . __('This website uses cookies to enhance the browsing experience. By continuing you give us permission to deploy cookies as per our <a href="%s" rel="nofollow">privacy and cookies policy</a>.', 'ejocc') . '</p>', $this->get_policy_url());
+        $cookie_consent_text = apply_filters( 'ejocc_cookie_consent_text', $cookie_consent_text );
+
+        if ( apply_filters('ejocc_custom_cookie_consent_content', false) ) {
+            $cookie_consent_text = apply_filters( 'the_content', get_option( 'ejocc_cookie_consent_text', $cookie_consent_text) );
+        }
+
+        return $cookie_consent_text;
+    }
+
+    /**
+     * Get Cookie Consent Button Text
+     *
+     * @access public
+     * @return string
+     */
+    public function get_cookie_consent_button_text() {
+
+        $cookie_consent_button_text = __('I understand', 'ejocc');
+        $cookie_consent_button_text = apply_filters( 'ejocc_cookie_consent_button_text', $cookie_consent_button_text );
+
+        if ( apply_filters('ejocc_custom_cookie_consent_content', false) ) {
+            $cookie_consent_button_text = get_option( 'ejocc_cookie_consent_button_text', $cookie_consent_button_text);
+        }
+
+        return $cookie_consent_button_text;
     }
 
     /**
@@ -186,9 +261,9 @@ final class EJO_Cookie_Consent {
     public function cookie_consent_block() {
 
         // Don't enqueue if consent cookie is set
-        if ( ! isset( $_COOKIE[$this->cookie_name] ) ) : ?>
+        if ( ! $this->cookie_consent_is_given() ) : ?>
             
-            <div class="" id="cookie-consent-block">Om Henneken.nl optimaal te laten functioneren gebruiken wij cookies. Voor meer informatie zie ons Privacy Beleid. - <button class="close-cookie-consent-block">Akkoord &amp; Sluiten</button></div>
+            <div class="" id="cookie-consent-block"><?= $this->get_cookie_consent_text(); ?><button class="close-cookie-consent-block"><?= $this->get_cookie_consent_button_text(); ?></button></div>
             
         <?php endif;
     }
@@ -197,16 +272,13 @@ final class EJO_Cookie_Consent {
      * Admin Settings Fields
      */
     public function settings() {
-        $custom_cookie_consent_text   = apply_filters( 'custom_cookie_consent_text', false );
-        $custom_cookie_consent_button = apply_filters( 'custom_cookie_consent_button', false );
-
-        if ($custom_cookie_consent_text) 
+        if ( apply_filters('ejocc_custom_cookie_consent_content', false) ) {
             $this->cookie_consent_text_setting();
-        else 
-            $this->privacy_policy_url_setting();
-
-        if ($custom_cookie_consent_button)
             $this->cookie_consent_button_setting();
+        }
+        else {
+            $this->policy_url_setting();
+        }
     }
 
     /**
@@ -214,8 +286,7 @@ final class EJO_Cookie_Consent {
      */
     public function cookie_consent_text_setting() {
         $option_group = 'reading';
-        $option_id    = 'ejocc-cookie-consent-text';
-        $option_name  = 'ejocc_cookie_consent_text';
+        $option_id  = 'ejocc_cookie_consent_text';
 
         // Register Setting - Privacy Policy URL
         register_setting( $option_group, $option_id, array( 'sanitize_callback' => 'wp_kses_post' ) );
@@ -225,15 +296,11 @@ final class EJO_Cookie_Consent {
             $option_id, 
             __( 'Cookie Consent Text' , 'ejocc' ),
             function() {
-                $option_id   = 'ejocc-cookie-consent-text';
-                $option_name = 'ejocc_cookie_consent_text';
-                $content     = get_option( 'ejocc_cookie_consent_text', '' );
+                $option_id = 'ejocc_cookie_consent_text';
+                $content     = $this->get_cookie_consent_text();
 
                 wp_editor( $content, $option_id, array(
-                    'textarea_name'   => $option_name,
-                    // 'editor_class' => 'regular-text',
                     'media_buttons'   => false,
-                    'quicktags'       => false,
                     'teeny'           => true,
                     'editor_height'   => 100
                 ));
@@ -252,8 +319,7 @@ final class EJO_Cookie_Consent {
      */
     public function cookie_consent_button_setting() {
         $option_group = 'reading';
-        $option_id    = 'ejocc-cookie-consent-button';
-        $option_name  = 'ejocc_cookie_consent_button';
+        $option_id    = 'ejocc_cookie_consent_button_text';
 
         // Register Setting - Privacy Policy URL
         register_setting( $option_group, $option_id, array( 'sanitize_callback' => 'sanitize_text_field' ) );
@@ -263,12 +329,11 @@ final class EJO_Cookie_Consent {
             $option_id, 
             __( 'Cookie Consent Button' , 'ejocc' ),
             function() {
-                $option_id   = 'ejocc-cookie-consent-button';
-                $option_name = 'ejocc_cookie_consent_button';
-                $value       = get_option( 'ejocc_cookie_consent_button', '' );
+                $option_id   = 'ejocc_cookie_consent_button_text';
+                $value       = $this->get_cookie_consent_button_text();
                 ?>
 
-                <input type="text" class="regular-text" id="<?= $option_id ?>" name="<?= $option_name ?>" value="<?= $value ?>" />
+                <input type="text" class="regular-text" id="<?= $option_id ?>" name="<?= $option_id ?>" value="<?= $value ?>" />
                 <p class="description"><?php _e( 'Enter the text to show on the button.', 'ejocc' ); ?></p>
 
                 <?php
@@ -282,10 +347,9 @@ final class EJO_Cookie_Consent {
     /**
      * Settings - Privacy Policy URL 
      */
-    public function privacy_policy_url_setting() {
+    public function policy_url_setting() {
         $option_group = 'reading';
-        $option_id    = 'ejocc-policy-url';
-        $option_name  = 'ejocc_policy_url';
+        $option_id    = 'ejocc_policy_url';
 
         // Register Setting - Privacy Policy URL
         register_setting( $option_group, $option_id, array( 'sanitize_callback' => 'esc_attr' ) );
@@ -295,12 +359,11 @@ final class EJO_Cookie_Consent {
             $option_id, 
             __( 'Privacy and Cookie Policy URL' , 'ejocc' ),
             function() {
-                $option_id   = 'ejocc-policy-url';
-                $option_name = 'ejocc_policy_url';
-                $value       = get_option( $option_name, '' );
+                $option_id   = 'ejocc_policy_url';
+                $value       = get_option( $option_id, '' );
                 ?>
 
-                <input type="url" class="regular-text code" id="<?= $option_id ?>" name="<?= $option_name ?>" value="<?= $value ?>" />
+                <input type="text" class="regular-text code" id="<?= $option_id ?>" name="<?= $option_id ?>" value="<?= $value ?>" />
                 <p class="description"><?php _e( 'Enter a link to your privacy and cookie policy where you outline the use of cookies. This link will be used in the cookie consent banner.', 'ejocc' ); ?></p>
 
                 <?php

@@ -21,14 +21,27 @@ var ejoCookieConsent = (function ($) {
      */
 
     // Variables
-    priv.debugMode            = true;                     // Debug Mode: true will disable the cookie, allowing you to debug the banner.
-    priv.consentDuration      = 30;                       // Duration in Days: The number of days before the cookie should expire.
-    priv.containerID          = 'cookie-consent-block';   // The ID of the notice container div
-    priv.containerButtonClass = 'close-cookie-consent-block';
-    priv.cookieName           = 'EUCookieConsent';        // The name of the cookie
-    priv.cookieActiveValue    = '1';                      // The active value of the cookie.
+    priv.debugMode            = false;                          // Debug Mode: true will disable the cookie, allowing you to debug the banner.
+    priv.consentDuration      = 30;                            // Duration in Days: The number of days before the cookie should expire.
+    priv.containerID          = 'cookie-consent-block';        // The ID of the notice container div
+    priv.containerButtonClass = 'close-cookie-consent-block';  // The Class of the accept-button
+    priv.cookieName           = ejoccLocalization.cookieName;  // The name of the cookie
+    priv.cookieActiveValue    = '1';                           // The active value of the cookie.
 
-    priv.setComplianceCookie = function() {
+    // Get Cookie helper
+    priv.getCookie = function(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    };
+
+    // Set the cookie
+    priv.setCookie = function() {
 
         // If no debug mode, set the cookie
         if ( ! priv.debugMode ) {
@@ -42,24 +55,19 @@ var ejoCookieConsent = (function ($) {
         }
     };
 
-    priv.createSpaceForCookieConsentBlock = function() {
+    // Check if cookie consent
+    priv.cookieConsentIsGiven = function(argument) {
+        console.log('cookieConsentIsGiven');
+        return (priv.getCookie(priv.cookieName) == priv.cookieActiveValue)
+    };
+
+    priv.onShowCookieConsentBlock = function() {
         // Get the height of the consent block
         var consentBlockHeight = $('#' + priv.containerID).innerHeight();
 
         // Add class to body
         $('body').addClass('has-cookie-banner');
         $('body').css('padding-top', consentBlockHeight + 'px');
-    };
-
-    priv.getCookie = function(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
     };
 
     priv.hideCookieConsentBlock = function(){
@@ -69,19 +77,20 @@ var ejoCookieConsent = (function ($) {
             // Remove cookie banner class
             $('body').removeClass('has-cookie-banner');
             $('body').css('padding-top', '0px');
-
         });
 
         // Set the cookie
-        priv.setComplianceCookie();
+        priv.setCookie();
     };
 
     publ.init = function() {
 
-        if(priv.getCookie(priv.cookieName) != priv.cookieActiveValue ){
-            priv.createSpaceForCookieConsentBlock();
+        // Do stuff if no consent for cookie yet
+        if( ! priv.cookieConsentIsGiven() ){
+            priv.onShowCookieConsentBlock();
         }
 
+        // Add event handler to close button
         $( '.' + priv.containerButtonClass).click(priv.hideCookieConsentBlock);
     };
 
