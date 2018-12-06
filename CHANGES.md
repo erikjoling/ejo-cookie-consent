@@ -1,3 +1,8 @@
+1.0
+- Refactored plugin code
+- Migrated cookie-consent-block from php to javascript
+- Added option to revoke consent of the admin user
+
 0.2
 - Added default style
 - Added filters for developer flexibility
