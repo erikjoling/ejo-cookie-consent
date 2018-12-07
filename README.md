@@ -17,3 +17,6 @@ Most of the plugin works in javascript for managing the cookie.
 But I use PHP Cookie code to detect if stylesheet needs to be added (based on given consent). 
 
 Does this lead to problems?
+
+### Debug mode should be an option in the settings
+Right now it's hooked to SCRIPT_DEBUG constant. When developing with that turned on it is a bugger...
