@@ -72,18 +72,14 @@ final class Core {
             'consentButtonText' => \Ejo\Cookie_Consent\Core::get_button_text()
         ] );
 
-        // Load script if the consent cookie isn't set
-        if ( ! \Ejo\Cookie_Consent\Cookie::consent_is_given() || $debug_mode ) {
-
-            // Don't enqueue if custom style
-            if ( ! apply_filters( 'ejo_cookie_consent_custom_style', false ) ) {                
-                wp_enqueue_style( 
-                    \Ejo\Cookie_Consent\Plugin::get_id() . '-style',
-                    \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/css/plugin{$suffix}.css", 
-                    [],
-                    \Ejo\Cookie_Consent\Plugin::get_version()
-                );
-            }
+        // Don't enqueue if custom style
+        if ( ! apply_filters( 'ejo_cookie_consent_disable_style', false ) ) {
+            wp_enqueue_style( 
+                \Ejo\Cookie_Consent\Plugin::get_id() . '-style',
+                \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/css/plugin{$suffix}.css", 
+                [],
+                \Ejo\Cookie_Consent\Plugin::get_version()
+            );
         }
     }
 

@@ -1,3 +1,7 @@
+1.0.1
+- Changed filter to disable plugin style to `ejo_cookie_consent_disable_style`
+- Always include stylesheet unless it is disable by theme
+
 1.0
 - Refactored plugin code
 - Migrated cookie-consent-block from php to javascript
