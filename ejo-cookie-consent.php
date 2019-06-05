@@ -3,7 +3,7 @@
  * Plugin Name:  EJO Cookie Consent
  * Plugin URI:   https://github.com/erikjoling/ejo-cookie-consent
  * Description:  Inform your visitors about Cookies & Privacy
- * Version:      1.0.1
+ * Version:      1.0.2
  * Author:       Erik Joling <erik@ejoweb.nl>
  * Author URI:   https://www.ejoweb.nl
  * Text Domain:  ejo/cookie-consent

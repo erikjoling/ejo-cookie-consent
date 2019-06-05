@@ -1,3 +1,7 @@
+1.0.2
+- Updated NPM modules
+- Improved debugging visualisation
+
 1.0.1
 - Changed filter to disable plugin style to `ejo_cookie_consent_disable_style`
 - Always include stylesheet unless it is disable by theme
