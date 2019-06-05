@@ -60,6 +60,14 @@
   margin: 0.5rem 1rem;
 }
 
+.ejo-cookie-consent__debug {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  font-size: 0.75em;
+  opacity: 0.5;
+}
+
 .ejo-cookie-consent__button {
   -ms-flex-negative: 0;
       flex-shrink: 0;

@@ -24,8 +24,7 @@ var ejoCookieConsent = (function () {
     // Variables
     
     // Debug. It does set the cookie, but the banner is always visible
-    priv.debugMode            = false; 
-    priv.debugMode            = ejoCookieConsentPlugin.debugMode;
+    priv.debugMode            = ejoCookieConsentPlugin.debugMode; // Linked to WP_DEBUG config constant
 
     // Duration in Days: The number of days before the cookie should expire.
     priv.consentDuration      = ejoCookieConsentPlugin.consentDuration; 
@@ -79,7 +78,7 @@ var ejoCookieConsent = (function () {
     // Check if cookie consent
     priv.cookieConsentIsGiven = function(argument) {
 
-        return ( priv.getCookie(priv.cookieName) );
+        return ( !! priv.getCookie(priv.cookieName) );
     };
 
     // Show 
@@ -94,6 +93,12 @@ var ejoCookieConsent = (function () {
         var cookieConsentBlockText = document.createElement( 'div' );
         cookieConsentBlockText.classList.add('ejo-cookie-consent__text');
         cookieConsentBlockText.innerHTML = priv.consentText;
+
+        if (priv.debugMode) {
+            var cookieConsentDebugText = '[Debug] Consent: ' + priv.cookieConsentIsGiven() + ', ' + priv.getCookie(priv.cookieName);
+            cookieConsentDebugText = '<div class="ejo-cookie-consent__debug">' + cookieConsentDebugText + '</div>';
+            cookieConsentBlockText.innerHTML = cookieConsentDebugText + priv.consentText;
+        }
 
         var cookieConsentBlockButton = document.createElement( 'button' );
         cookieConsentBlockButton.classList.add('ejo-cookie-consent__button');
@@ -139,6 +144,8 @@ var ejoCookieConsent = (function () {
 
             // Listen to button
             priv.cookieConsentBlock.querySelector( '.ejo-cookie-consent__button' ).addEventListener( 'click', priv.hideCookieConsentBlock );
+
+
         }
     };
 
