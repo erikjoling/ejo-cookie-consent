@@ -118,8 +118,8 @@ final class Admin {
                 ?>
                 <script>
                     EjoCookieConsentEraseCookie( '<?= \Ejo\Cookie_Consent\Cookie::get_name() ?>' );
-                </script>                
-                <?php                
+                </script>
+                <?php
 
                 // Notify
                 \Ejo\Cookie_Consent\Admin::admin_page_notification( __( 'Cookie Consent revoked successfully.', 'ejo-cookie-consent' ) );
@@ -132,12 +132,12 @@ final class Admin {
             <p>
                 <?php
 
-                $privacy_settings_permalink = '<a href="' . get_admin_url() . 'privacy.php">' . __( 'Privacy Settings' ) . '</a>';
-                printf( 
+                $privacy_settings_permalink = '<a href="' . get_admin_url() . 'options-privacy.php">' . __( 'Privacy Settings' ) . '</a>';
+                printf(
                     __( 'You should link to your Privacy Page in the Cookie Consent Text. If you don\'t have a Privacy Policy Page you can set it at %s.', 'ejo-cookie-consent' ),
-                    $privacy_settings_permalink    
-                ); 
-                
+                    $privacy_settings_permalink
+                );
+
                 ?>
             </p>
             <form method="post" action="">
@@ -149,7 +149,7 @@ final class Admin {
                         </th>
                         <td>
                             <div style="max-width:600px">
-                                <?php 
+                                <?php
 
                                 $option_id = 'ejo_cookie_consent_text';
                                 $content   = \Ejo\Cookie_Consent\Core::get_text();
@@ -170,20 +170,20 @@ final class Admin {
                         </th>
                         <td>
                             <div style="max-width:600px">
-                                <?php 
+                                <?php
 
                                 $option_id = 'ejo_cookie_consent_button_text';
                                 $value     = \Ejo\Cookie_Consent\Core::get_button_text();
                                 ?>
 
                                 <input type="text" class="regular-text" id="<?= $option_id ?>" name="<?= $option_id ?>" value="<?= $value ?>" />
-                                
+
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            
+
                         </th>
                         <td>
                             <?php
@@ -195,7 +195,7 @@ final class Admin {
                     </tr>
                 </table>
             </form>
-            
+
             <hr/>
             <h2><?= __( 'Personal Cookie Consent', 'ejo-cookie-consent' ); ?></h2>
 
@@ -207,14 +207,14 @@ final class Admin {
                     <td>
                         <div style="max-width:600px">
 
-                            <script>                               
+                            <script>
                                 var EjoCookieConsentCookie = EjoCookieConsentGetCookie( '<?= \Ejo\Cookie_Consent\Cookie::get_name() ?>' );
 
                                 if (EjoCookieConsentCookie) {
                                     document.write( '<p>Cookie Consent is given by you on this browser.<br/>Value: <i>' + EjoCookieConsentCookie + '</i></p>' );
                                 }
                                 else {
-                                    document.write( '<p>No Cookie Consent is given by you on this browser.</p>' );   
+                                    document.write( '<p>No Cookie Consent is given by you on this browser.</p>' );
                                 }
                             </script>
 
@@ -223,7 +223,7 @@ final class Admin {
                 </tr>
                 <tr>
                     <th scope="row">
-                        
+
                     </th>
                     <td>
                         <form method="post" action="">
@@ -267,11 +267,11 @@ final class Admin {
             };
 
             // Erase Cookie
-            var EjoCookieConsentEraseCookie = function( name ) {   
+            var EjoCookieConsentEraseCookie = function( name ) {
                 document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             }
-        </script>        
-        <?php       
+        </script>
+        <?php
     }
 
 
@@ -296,7 +296,7 @@ final class Admin {
 
     /**
      * Manage settings
-     * 
+     *
      * Deprecated. We don't use the settings API
      *
      * @return void
@@ -314,7 +314,7 @@ final class Admin {
 
     /**
      * Settings - Cookie Consent Text
-     * 
+     *
      * Deprecated. We don't use the settings API
      *
      * @return void
@@ -329,7 +329,7 @@ final class Admin {
 
         // Add Settings Field - Privacy Policy URL
         add_settings_field(
-            $option_id, 
+            $option_id,
             __( 'Cookie Consent Text' , 'ejo-cookie-consent' ),
             function() {
 
@@ -345,7 +345,7 @@ final class Admin {
                 echo '</div>';
 
                 // echo (!empty($desc))?'<br/><span class="description">'.$desc.'</span>':'';
-            }, 
+            },
             $option_group,
             'default',
             [ 'label_for' => $option_id ]
@@ -355,7 +355,7 @@ final class Admin {
 
     /**
      * Settings - Cookie Consent Button
-     * 
+     *
      * Deprecated. We don't use the settings API
      *
      * @return void
@@ -370,19 +370,19 @@ final class Admin {
 
         // Add Settings Field - Privacy Policy URL
         add_settings_field(
-            $option_id, 
+            $option_id,
             __( 'Cookie Consent Button' , 'ejo-cookie-consent' ),
             function() {
 
                 $option_id = 'ejo_cookie_consent_button_text';
-                $value     = \Ejo\Cookie_Consent\Core::get_button_text();             
+                $value     = \Ejo\Cookie_Consent\Core::get_button_text();
                 ?>
 
                 <input type="text" class="regular-text" id="<?= $option_id ?>" name="<?= $option_id ?>" value="<?= $value ?>" />
                 <p class="description"><?php _e( 'Enter the text to show on the button.', 'ejo-cookie-consent' ); ?></p>
 
                 <?php
-            }, 
+            },
             $option_group,
             'default',
             array( 'label_for' => $option_id )
@@ -390,8 +390,8 @@ final class Admin {
     }
 
     /**
-     * Settings - Privacy Policy URL 
-     * 
+     * Settings - Privacy Policy URL
+     *
      * Deprecated. We don't use the settings API
      *
      * @return void
@@ -405,7 +405,7 @@ final class Admin {
 
         // Add Settings Field - Privacy Policy URL
         add_settings_field(
-            $option_id, 
+            $option_id,
             __( 'Privacy and Cookie Policy URL' , 'ejo-cookie-consent' ),
             function() {
                 $option_id   = 'ejo_cookie_consent_privacy_policy_url';
@@ -416,7 +416,7 @@ final class Admin {
                 <p class="description"><?php _e( 'Enter a link to your privacy and cookie policy where you outline the use of cookies. This link will be used in the cookie consent banner.', 'ejo-cookie-consent' ); ?></p>
 
                 <?php
-            }, 
+            },
             $option_group,
             'default',
             array( 'label_for' => $option_id )
@@ -427,7 +427,7 @@ final class Admin {
     /*=============================================================*/
     /**                           Debug                            */
     /*=============================================================*/
-    
+
     /**
      * Debug plugin data
      *
