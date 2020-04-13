@@ -1,3 +1,8 @@
+1.1
+- Added filter to disable debug mode
+- Fixed link to privacy settings
+- Improved plugin developer tools
+
 1.0.2
 - Updated NPM modules
 - Improved debugging visualisation

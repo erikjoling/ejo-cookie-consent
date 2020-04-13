@@ -3,14 +3,14 @@
  * Plugin Name:  EJO Cookie Consent
  * Plugin URI:   https://github.com/erikjoling/ejo-cookie-consent
  * Description:  Inform your visitors about Cookies & Privacy
- * Version:      1.0.2
+ * Version:      1.1
  * Author:       Erik Joling <erik@ejoweb.nl>
  * Author URI:   https://www.ejoweb.nl
  * Text Domain:  ejo/cookie-consent
  * Domain Path:  /resources/languages
  * Requires PHP: 7
  * License:      GPLv3
- * 
+ *
  * GitHub Plugin URI:  https://github.com/erikjoling/ejo-cookie-consent
  * GitHub Branch:      master
  */
@@ -37,7 +37,7 @@ final class Plugin {
      * @var string
      */
     private static $file;
-    
+
     /**
      * Directory path with trailing slash.
      *
@@ -93,14 +93,14 @@ final class Plugin {
      * @return void
      */
     private static function setup() {
-        
+
         // Setting file has priority because other setters are dependant on it
         static::set_file();
         static::set_dir();
         static::set_uri();
         static::set_version();
         static::set_id();
-        
+
         // Inform WordPress of custom language directory
         load_plugin_textdomain( 'ejo/cookie-consent', false, __DIR__ . '/assets/languages' );
 
@@ -127,7 +127,7 @@ final class Plugin {
         // Start Admin
         \Ejo\Cookie_Consent\Admin::get_instance();
 
-        
+
         // Give off the loaded hook for this plugin
         do_action( static::get_id() . '_loaded' );
     }
@@ -243,7 +243,7 @@ final class Plugin {
     /*=============================================================*/
     /**                           Debug                            */
     /*=============================================================*/
-    
+
     /**
      * Debug plugin data
      *
