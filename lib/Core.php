@@ -55,16 +55,16 @@ final class Core {
         $debug_mode = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 
         // Register
-        wp_enqueue_script( 
+        wp_enqueue_script(
             \Ejo\Cookie_Consent\Plugin::get_id() . "-script",
-            \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/js/plugin{$suffix}.js", 
-            [], 
-            \Ejo\Cookie_Consent\Plugin::get_version(), 
+            \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/js/plugin{$suffix}.js",
+            [],
+            \Ejo\Cookie_Consent\Plugin::get_version(),
             true
         );
 
         // Localize the script
-        wp_localize_script( \Ejo\Cookie_Consent\Plugin::get_id() . "-script", 'ejoCookieConsentPlugin', [ 
+        wp_localize_script( \Ejo\Cookie_Consent\Plugin::get_id() . "-script", 'ejoCookieConsentPlugin', [
             'debugMode'         => $debug_mode,
             'consentDuration'   => \Ejo\Cookie_Consent\Cookie::get_duration(),
             'cookieName'        => \Ejo\Cookie_Consent\Cookie::get_name(),
@@ -74,9 +74,9 @@ final class Core {
 
         // Don't enqueue if custom style
         if ( ! apply_filters( 'ejo_cookie_consent_disable_style', false ) ) {
-            wp_enqueue_style( 
+            wp_enqueue_style(
                 \Ejo\Cookie_Consent\Plugin::get_id() . '-style',
-                \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/css/plugin{$suffix}.css", 
+                \Ejo\Cookie_Consent\Plugin::get_uri() . "assets/css/plugin{$suffix}.css",
                 [],
                 \Ejo\Cookie_Consent\Plugin::get_version()
             );
@@ -177,13 +177,13 @@ final class Core {
 
         // Don't enqueue if consent cookie is set
         if ( ! \Ejo\Cookie_Consent\Cookie::consent_is_given() ) : ?>
-            
+
             <div class="ejo-cookie-consent">
                 <div class="ejo-cookie-consent__inner">
                     <?= static::get_text(); ?><button class="ejo-cookie-consent__button"><?= static::get_button_text(); ?></button>
                 </div>
             </div>
-            
+
         <?php endif;
     }
 
@@ -191,7 +191,7 @@ final class Core {
     /*=============================================================*/
     /**                           Debug                            */
     /*=============================================================*/
-    
+
     /**
      * Debug plugin data
      *
