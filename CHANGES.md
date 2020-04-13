@@ -1,3 +1,6 @@
+1.1.1
+- Updated build tools
+
 1.1
 - Added filter to disable debug mode
 - Fixed link to privacy settings
