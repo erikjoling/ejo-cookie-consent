@@ -52,7 +52,7 @@ final class Core {
     public static function manage_scripts_and_styles() {
 
         $suffix     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-        $debug_mode = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+        $debug_mode = apply_filters( 'ejo_cookie_consent_debug_mode', ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) );
 
         // Register
         wp_enqueue_script(

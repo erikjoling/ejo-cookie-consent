@@ -15,4 +15,4 @@ Here you can delete the cookie as well if you want.
 Most of the plugin works in javascript for managing the cookie. Gotta remove the PHP cookie stuff.
 
 ### Debug mode should be an option in the settings
-Right now it's hooked to SCRIPT_DEBUG constant. When developing with that turned on it is a bugger...
+Right now it's hooked to SCRIPT_DEBUG constant. When developing with that turned on it is a bugger... Note: Recently added the possibility to filter this using `ejo_cookie_consent_debug_mode`.
